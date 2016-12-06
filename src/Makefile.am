@@ -1,0 +1,4 @@
+SUBDIRS= \
+ libostatistic \
+ example \
+ python

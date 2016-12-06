@@ -1,0 +1,76 @@
+Summary: OpenStatistic
+Name: openstatistic
+Version: @VERSION@
+Release: 1%{?dist}
+License: BSD
+Group: Applications/System
+URL: http://adjacentlink.com
+Source0: %{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+Requires: protobuf python
+BuildRequires: protobuf-devel
+Prefix: /usr
+Vendor: Adjacent Link LLC
+
+%description
+OpenStatistic
+%package devel
+Summary: OpenStatistic Headers
+Group: Development/Libraries
+Requires: protobuf-devel openstatistic
+
+%description devel
+OpenStatistic Headers
+
+%package -n python-openstatistic
+Requires: protobuf-python
+Summary: OpenStatistic Python modules
+Group: Development/Libraries
+BuildArch: noarch
+
+%description -n python-openstatistic
+OpenStatistic Python modules
+
+%prep
+%setup -q
+
+%build
+%configure
+make
+
+%install
+make DESTDIR=${RPM_BUILD_ROOT} install
+find ${RPM_BUILD_ROOT} -name '*.a' -exec rm '{}'  \;
+find ${RPM_BUILD_ROOT} -name '*.la' -exec rm '{}' \;
+%if 0%{?el6}
+find  ${RPM_BUILD_ROOT} -name "namespace_packages.txt" -exec sh -c "echo ostatistic > {}" \;
+%endif
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%post
+/sbin/ldconfig
+
+%postun
+/sbin/ldconfig
+
+%files
+%defattr(-,root,root,-)
+%{_libdir}/*.so
+
+%doc AUTHORS
+%doc COPYING
+%doc NEWS
+%doc README
+%doc INSTALL
+
+%files devel
+%defattr(-, root, root)
+%{_includedir}/*
+%{_libdir}/pkgconfig
+
+%files -n python-openstatistic
+%defattr(-,root,root)
+%{prefix}/lib*/python*
+%{_bindir}/ostatistic
