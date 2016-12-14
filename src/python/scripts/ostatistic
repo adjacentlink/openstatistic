@@ -1,0 +1,132 @@
+#!/bin/env python
+# Copyright (c) 2016 - Adjacent Link LLC, Bridgewater, New Jersey
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# * Redistributions of source code must retain the above copyright
+#   notice, this list of conditions and the following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright
+#   notice, this list of conditions and the following disclaimer in
+#   the documentation and/or other materials provided with the
+#   distribution.
+# * Neither the name of Adjacent Link LLC nor the names of its
+#   contributors may be used to endorse or promote products derived
+#   from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+# COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+# See toplevel COPYING for more information.
+#
+
+from ostatistic.interface.client import Client
+from argparse import ArgumentParser
+import sys
+
+def print_tables(tables):
+    for name in sorted(tables.iterkeys()):
+        widths = []
+        (labels,rows) = tables[name]
+
+        for label in labels:
+          widths.append(len(label))
+
+        for row in rows:
+            i = 0
+            for item in row:
+                widths[i] = max(len(str(item)),widths[i])
+                i += 1
+
+        print name
+
+        i = 0
+        for label in labels:
+            print '|',str(label).ljust(widths[i]),
+            i += 1
+        print "|"
+        if not len(rows):
+            print
+        else:
+            for row in rows:
+                i = 0
+                for item in row:
+                    print '|',str(item).ljust(widths[i]),
+                    i += 1
+                print "|"
+            print
+
+def print_statistics(statistics):
+    for name in sorted(statistics.iterkeys()):
+        print name,"=",statistics[name]
+
+usage ='ostatistic [OPTION]... <hostname> <command> <target> [names]...'
+
+argumentParser = ArgumentParser(usage=usage)
+
+argumentParser.add_argument('-p',
+                            '--port',
+                            type=int,
+                            dest="port",
+                            default=47001,
+                            help="libostatistic listen port [default: %(default)s]")
+
+argumentParser.add_argument('hostname',
+                            help="libostatistic host name or address")
+
+argumentParser.add_argument('command',
+                            choices=['get','clear'],
+                            help="command action")
+
+argumentParser.add_argument('target',
+                            choices=['stat','table'],
+                            help="target of command action")
+
+argumentParser.add_argument('names',
+                            nargs='*',
+                            help="names of individual items to target where none means all")
+
+ns = argumentParser.parse_args()
+
+args = vars(ns)
+
+client = Client()
+
+try:
+    client.open(args['hostname'],args['port'])
+
+except Exception as exp:
+    print >>sys.stderr, exp
+    exit(1)
+
+try:
+    if args['command'] == 'get':
+        if args['target'] == 'stat':
+            print_statistics(client.statistics(args['names']))
+        else:
+            print_tables(client.tables(args['names']))
+
+    else:
+        if args['target'] == 'stat':
+            client.clear_statistics(args['names'])
+        else:
+            client.clear_tables(args['names'])
+
+except Exception as exp:
+    print >>sys.stderr, exp
+    exit(1)
+
+finally:
+    client.close()

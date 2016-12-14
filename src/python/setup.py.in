@@ -1,0 +1,17 @@
+from setuptools import setup
+
+setup(name='python-openstatistic',
+      namespace_packages=['otestpoint'],
+      version='@VERSION@',
+      description='OpenStatistic Python Tools',
+      long_description='OpenStatistic Python Tools',
+      author='Adjacent Link LLC',
+      author_email='labs at adjacent link dot com',
+      url="https://adjacentlink.com",
+       packages=['ostatistic',
+                 'ostatistic.interface',
+                 'otestpoint',
+                 'otestpoint.ostatistic'],
+      scripts=['scripts/ostatistic'],
+      license = 'BSD'
+)
