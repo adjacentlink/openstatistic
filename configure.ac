@@ -40,6 +40,8 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([])
 
+: ${CXXFLAGS="-g -O3 -Wall -Wextra"}
+
 AC_PROG_CXX
 
 AC_PROG_CXXCPP
@@ -67,9 +69,6 @@ AC_SUBST(otestpoint_CFLAGS,
 
 AC_SUBST(otestpoint_LIBS,
 ["-lopenstatistic ${protobuf_LIBS}"])
-
-# compiler options
-CXXFLAGS="$CXXFLAGS -W -Wall -g0 -O3"
 
 # options for use with gprof
 if test "$with_profile" = "yes"
