@@ -1,5 +1,5 @@
 %AC_COPYRIGHT([
- Copyright (c) 2016 - Adjacent Link LLC, Bridgewater, New Jersey
+ Copyright (c) 2016-2018 - Adjacent Link LLC, Bridgewater, New Jersey
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -32,13 +32,15 @@
  See toplevel COPYING for more information.
 ])
 
-AC_INIT([openstatistic],1.0.1,[labs at adjacent link dot com])
+AC_INIT([openstatistic],1.0.2,[labs at adjacent link dot com])
 
 AC_CONFIG_SRCDIR([src])
 
 AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([])
+
+: ${CXXFLAGS="-g -O3 -Wall -Wextra"}
 
 AC_PROG_CXX
 
@@ -67,9 +69,6 @@ AC_SUBST(otestpoint_CFLAGS,
 
 AC_SUBST(otestpoint_LIBS,
 ["-lopenstatistic ${protobuf_LIBS}"])
-
-# compiler options
-CXXFLAGS="$CXXFLAGS -W -Wall -g0 -O3"
 
 # options for use with gprof
 if test "$with_profile" = "yes"

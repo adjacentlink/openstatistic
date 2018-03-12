@@ -36,7 +36,7 @@
 #include "requestmessagehandler.h"
 #include "openstatisticapi.pb.h"
 
-#include <sys/socket.h>
+#include <sys/uio.h>
 #include <arpa/inet.h>
 
 OpenStatistic::Session::Session(RegistrarImpl & registrarImpl):

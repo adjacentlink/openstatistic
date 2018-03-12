@@ -4,16 +4,30 @@ Version: @VERSION@
 Release: 1%{?dist}
 License: BSD
 Group: Applications/System
-URL: http://adjacentlink.com
+URL: https://github.com/adjacentlink/openstatistic
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Requires: protobuf python
+Requires: protobuf
 BuildRequires: protobuf-devel
-Prefix: /usr
 Vendor: Adjacent Link LLC
+
+%if 0%{?fc26} || 0%{?fc27}
+%define use_python2 python2
+%define use_python2_package python2-openstatistic
+%define use_python2_protobuf python2-protobuf
+%define use_python2_lxml python2-lxml
+%define use_python2_sitelib %{python2_sitelib}
+%else
+%define use_python2 python
+%define use_python2_package python-openstatistic
+%define use_python2_protobuf protobuf-python
+%define use_python2_lxml python-lxml
+%define use_python2_sitelib %{python_sitelib}
+%endif
 
 %description
 OpenStatistic
+
 %package devel
 Summary: OpenStatistic Headers
 Group: Development/Libraries
@@ -22,13 +36,17 @@ Requires: protobuf-devel openstatistic
 %description devel
 OpenStatistic Headers
 
-%package -n python-openstatistic
-Requires: protobuf-python
+%package -n %{use_python2_package}
+Requires: %{use_python2} %{use_python2_protobuf} %{use_python2_lxml}
 Summary: OpenStatistic Python modules
 Group: Development/Libraries
 BuildArch: noarch
+%if 0%{?fc26} || 0%{?fc27}
+Obsoletes: python-openstatistic
+Provides: python-openstatistic
+%endif
 
-%description -n python-openstatistic
+%description -n %{use_python2_package}
 OpenStatistic Python modules
 
 %prep
@@ -45,6 +63,9 @@ find ${RPM_BUILD_ROOT} -name '*.la' -exec rm '{}' \;
 %if 0%{?el6}
 find  ${RPM_BUILD_ROOT} -name "namespace_packages.txt" -exec sh -c "echo ostatistic > {}" \;
 %endif
+mv %{buildroot}/%{_bindir}/ostatistic %{buildroot}/%{_bindir}/ostatistic-%{python2_version}
+ln -s ostatistic-%{python2_version} %{buildroot}/%{_bindir}/ostatistic-2
+ln -s ostatistic-2 %{buildroot}/%{_bindir}/ostatistic
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -70,7 +91,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 %{_libdir}/pkgconfig
 
-%files -n python-openstatistic
+%files -n %{use_python2_package}
 %defattr(-,root,root)
-%{prefix}/lib*/python*
+%{use_python2_sitelib}/*
 %{_bindir}/ostatistic
+%{_bindir}/ostatistic-2*
