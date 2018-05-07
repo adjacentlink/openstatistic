@@ -11,7 +11,7 @@ Requires: protobuf
 BuildRequires: protobuf-devel
 Vendor: Adjacent Link LLC
 
-%if 0%{?fc26} || 0%{?fc27}
+%if 0%{?fedora} >= 26
 %define use_python2 python2
 %define use_python2_package python2-openstatistic
 %define use_python2_protobuf python2-protobuf
@@ -41,7 +41,7 @@ Requires: %{use_python2} %{use_python2_protobuf} %{use_python2_lxml}
 Summary: OpenStatistic Python modules
 Group: Development/Libraries
 BuildArch: noarch
-%if 0%{?fc26} || 0%{?fc27}
+%if 0%{?fedora} >= 26
 Obsoletes: python-openstatistic
 Provides: python-openstatistic
 %endif
