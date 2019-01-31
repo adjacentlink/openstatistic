@@ -204,8 +204,8 @@ class ProbeBase(Probe):
 
         for name,probe in self._probes:
             probe.Clear()
-            for member in dir(probe):
-                if member.islower() and member[0] != '_' and  member != "description":
+            for member in sorted(probe.DESCRIPTOR.fields_by_name.keys()):
+                if member != 'description':
                     setattr(probe,member,lstats[member.replace('_','.')])
 
             probeData.append((name,
@@ -218,8 +218,8 @@ class ProbeBase(Probe):
         for name,probe in self._tables:
             probe.Clear()
 
-            for member in dir(probe):
-                if member.islower() and member[0] != '_' and  member != "description":
+            for member in sorted(probe.DESCRIPTOR.fields_by_name.keys()):
+                if member != 'description':
                     table = getattr(probe,member)
 
                     labels,rows = ltables[member.replace('_','.')]
