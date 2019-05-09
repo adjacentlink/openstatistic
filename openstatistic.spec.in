@@ -25,6 +25,12 @@ Vendor: Adjacent Link LLC
 %define use_python2_sitelib %{python_sitelib}
 %endif
 
+%if 0%{?fedora} >= 26
+BuildRequires: python3-devel
+%else
+%define with_python3 0
+%endif
+
 %description
 OpenStatistic
 
@@ -32,6 +38,8 @@ OpenStatistic
 Summary: OpenStatistic Headers
 Group: Development/Libraries
 Requires: protobuf-devel openstatistic
+
+%define with_python3 %{?_without_python3:0} %{?!_without_python3:1}
 
 %description devel
 OpenStatistic Headers
@@ -49,6 +57,16 @@ Provides: python-openstatistic
 %description -n %{use_python2_package}
 OpenStatistic Python modules
 
+%package -n python3-openstatistic
+Requires: python3-protobuf
+Requires: python3-lxml
+Summary: OpenStatistic Python modules
+Group: Development/Libraries
+BuildArch: noarch
+
+%description -n python3-openstatistic
+OpenStatistic Python modules
+
 %prep
 %setup -q
 
@@ -56,8 +74,21 @@ OpenStatistic Python modules
 %configure
 make
 
+%if %{with_python3}
+# build the python3 version
+make -C src/python PYTHON=%{__python3}
+%endif
+
 %install
 make DESTDIR=${RPM_BUILD_ROOT} install
+
+%if %{with_python3}
+make  DESTDIR=${RPM_BUILD_ROOT} -C src/python PYTHON=%{__python3} install
+mv %{buildroot}/%{_bindir}/ostatistic %{buildroot}/%{_bindir}/ostatistic-%{python3_version}
+ln -s ostatistic-%{python3_version} %{buildroot}/%{_bindir}/ostatistic-3
+%endif
+
+make DESTDIR=${RPM_BUILD_ROOT} install -C src/python PYTHON=%{__python2} install
 find ${RPM_BUILD_ROOT} -name '*.a' -exec rm '{}'  \;
 find ${RPM_BUILD_ROOT} -name '*.la' -exec rm '{}' \;
 %if 0%{?el6}
@@ -96,3 +127,11 @@ rm -rf $RPM_BUILD_ROOT
 %{use_python2_sitelib}/*
 %{_bindir}/ostatistic
 %{_bindir}/ostatistic-2*
+
+%if %{with_python3}
+%files -n python3-openstatistic
+%defattr(-,root,root,-)
+%{python3_sitelib}/*
+%{_bindir}/ostatistic-3*
+%endif
+

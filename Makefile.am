@@ -44,7 +44,8 @@ rpm: $(PACKAGE).spec dist-gzip
 	cp -f $(PACKAGE)-$(VERSION).tar.gz .rpmbuild/SOURCES
 	rpmbuild --clean -ba $(top_srcdir)/$(PACKAGE).spec --target $(RPMARCH) \
     --define "_topdir $$PWD/.rpmbuild" \
-    --define "_tmppath $$PWD/.rpmbuild/tmp"
+    --define "_tmppath $$PWD/.rpmbuild/tmp" \
+    $(RPMBUILD_ARGS)
 	@echo "============================================================"
 	@echo "RPMs located in .rpmbuild/RPMS and .rpmbuild/SRPMS"
 
@@ -58,6 +59,13 @@ deb: dist-gzip
 	cd .debbuild && tar xzf $(PACKAGE)-$(VERSION).tar.gz
 	$(edit) .debbuild/$(PACKAGE)-$(VERSION)/debian/changelog.in > \
           .debbuild/$(PACKAGE)-$(VERSION)/debian/changelog
+	if test -n "$(WITHOUT_PYTHON3)"; \
+	   then \
+	    cp .debbuild/$(PACKAGE)-$(VERSION)/debian/control.without-python3 \
+              .debbuild/$(PACKAGE)-$(VERSION)/debian/control; \
+            cp .debbuild/$(PACKAGE)-$(VERSION)/debian/rules.without-python3 \
+              .debbuild/$(PACKAGE)-$(VERSION)/debian/rules; \
+        fi
 	cd .debbuild/$(PACKAGE)-$(VERSION) && dpkg-buildpackage -F -us -uc
 	@echo "============================================================"
 	@echo "debs located in .debbuild"

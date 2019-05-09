@@ -24,9 +24,3 @@ Provides: ${python:Provides}
 Depends: ${python:Depends}, ${misc:Depends}, python-protobuf, python-lxml
 Description: OpenStatistic Python modules and utilities
 
-Package: python3-openstatistic
-Section: python
-Architecture: all
-Provides: ${python:Provides}
-Depends: ${python3:Depends}, ${misc:Depends}, python3-protobuf, python3-lxml
-Description: OpenStatistic Python modules and utilities

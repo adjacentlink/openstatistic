@@ -40,6 +40,8 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([])
 
+AM_PATH_PYTHON([2.7])
+
 : ${CXXFLAGS="-g -O3 -Wall -Wextra"}
 
 AC_PROG_CXX

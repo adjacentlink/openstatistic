@@ -1,4 +1,4 @@
-# Copyright (c) 2016 - Adjacent Link LLC, Bridgewater, New Jersey
+# Copyright (c) 2016,2019 - Adjacent Link LLC, Bridgewater, New Jersey
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@
 import ostatistic.interface.openstatisticapi_pb2 as openstatisticapi_pb2
 import socket
 import struct
+import sys
 
 def fromAny(any):
     if any.type == openstatisticapi_pb2.Any.TYPE_ANY_INT64:
@@ -69,7 +70,7 @@ class Client(object):
         self._sock.send(struct.pack("!L%ds" % len(msg),len(msg),msg))
 
         # wait for response
-        buf = str()
+        buf = bytes() if sys.version_info >= (3,0) else ""
         messageLengthBytes = 0
         response = None
 
@@ -87,7 +88,7 @@ class Client(object):
 
                 if(len(buf) == 4):
                     (messageLengthBytes,) = struct.unpack('!I',buf)
-                    buf = str()
+                    buf = bytes() if sys.version_info >= (3,0) else ""
 
             else:
                 data = self._sock.recv(messageLengthBytes-len(buf))
@@ -104,7 +105,7 @@ class Client(object):
                     response = openstatisticapi_pb2.Response()
                     response.ParseFromString(buf)
                     messageLengthBytes = 0
-                    buf = str()
+                    buf = bytes() if sys.version_info >= (3,0) else ""
 
                     if response.type == openstatisticapi_pb2.Response.TYPE_RESPONSE_ERROR:
                         raise ClientException(response.error.description);
