@@ -20,7 +20,6 @@ Description: Headers necessary to use OpenStatistic
 Package: python-openstatistic
 Section: python
 Architecture: all
-Provides: ${python:Provides}
 Depends: ${python:Depends}, ${misc:Depends}, python-protobuf, python-lxml
 Description: OpenStatistic Python modules and utilities
 
