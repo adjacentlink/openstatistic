@@ -32,13 +32,15 @@
  See toplevel COPYING for more information.
 ])
 
-AC_INIT([openstatistic],1.0.5,[labs at adjacent link dot com])
+AC_INIT([openstatistic],1.0.6,[labs at adjacent link dot com])
 
 AC_CONFIG_SRCDIR([src])
 
 AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([])
+
+AM_PATH_PYTHON([2.7])
 
 : ${CXXFLAGS="-g -O3 -Wall -Wextra"}
 

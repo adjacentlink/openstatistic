@@ -1,5 +1,6 @@
 #
-# Copyright (c) 2014-2016 - Adjacent Link LLC, Bridgewater, New Jersey
+# Copyright (c) 2014-2016,2019 - Adjacent Link LLC, Bridgewater,
+# New Jersey
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -188,16 +189,16 @@ class ProbeBase(Probe):
                             rowData.append(fromAny(value))
                         tableData.append(tuple(rowData))
                     tables[table.name] = (tuple(table.labels),tuple(tableData))
-                    
+
         self._logger.log(Logger.DEBUG_LEVEL,"/%s probe processing" % self._name)
         lstats = {}
 
-        for name,entry in stats.items():
+        for name,entry in list(stats.items()):
             lstats[name.lower()] = entry
 
         ltables = {}
 
-        for name,entry in tables.items():
+        for name,entry in list(tables.items()):
             ltables[name.lower()] = entry
 
         probeData = []

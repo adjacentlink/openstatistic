@@ -11,18 +11,48 @@ Requires: protobuf
 BuildRequires: protobuf-devel
 Vendor: Adjacent Link LLC
 
-%if 0%{?fedora} >= 26
-%define use_python2 python2
-%define use_python2_package python2-openstatistic
-%define use_python2_protobuf python2-protobuf
-%define use_python2_lxml python2-lxml
-%define use_python2_sitelib %{python2_sitelib}
+%define with_old_depends 0
+%define with_pathfix 1
+
+# RHEL/CentOS
+%if 0%{?el7}
+%define with_python2 1
+%define with_old_depends 1
+%define with_pathfix 0
+%endif
+
+%if 0%{?el8}
+%define with_python3 1
+%endif
+
+# Fedora (non-EOL)
+%if 0%{?fedora}
+%if %{fedora} < 31
+%define with_python3 1
+%define with_python2 1
 %else
+%define with_python3 1
+%endif
+%endif
+
+%if 0%{?with_python2}
+%if %{with_old_depends}
 %define use_python2 python
 %define use_python2_package python-openstatistic
 %define use_python2_protobuf protobuf-python
 %define use_python2_lxml python-lxml
 %define use_python2_sitelib %{python_sitelib}
+%else
+%define use_python2 python2
+%define use_python2_package python2-openstatistic
+%define use_python2_protobuf python2-protobuf
+%define use_python2_lxml python2-lxml
+%define use_python2_sitelib %{python2_sitelib}
+%endif
+%endif
+
+%if 0%{?with_python3}
+BuildRequires: python3-devel
 %endif
 
 %description
@@ -36,18 +66,28 @@ Requires: protobuf-devel openstatistic
 %description devel
 OpenStatistic Headers
 
+%if 0%{?with_python2}
 %package -n %{use_python2_package}
 Requires: %{use_python2} %{use_python2_protobuf} %{use_python2_lxml}
 Summary: OpenStatistic Python modules
 Group: Development/Libraries
 BuildArch: noarch
-%if 0%{?fedora} >= 26
-Obsoletes: python-openstatistic
-Provides: python-openstatistic
-%endif
 
 %description -n %{use_python2_package}
 OpenStatistic Python modules
+%endif
+
+%if 0%{?with_python3}
+%package -n python3-openstatistic
+Requires: python3-protobuf
+Requires: python3-lxml
+Summary: OpenStatistic Python modules
+Group: Development/Libraries
+BuildArch: noarch
+
+%description -n python3-openstatistic
+OpenStatistic Python modules
+%endif
 
 %prep
 %setup -q
@@ -56,16 +96,36 @@ OpenStatistic Python modules
 %configure
 make
 
+%if %{?with_python3:1}%{!?with_python3:0}
+# build the python3 version
+make -C src/python PYTHON=%{__python3}
+%endif
+
 %install
 make DESTDIR=${RPM_BUILD_ROOT} install
-find ${RPM_BUILD_ROOT} -name '*.a' -exec rm '{}'  \;
-find ${RPM_BUILD_ROOT} -name '*.la' -exec rm '{}' \;
-%if 0%{?el6}
-find  ${RPM_BUILD_ROOT} -name "namespace_packages.txt" -exec sh -c "echo ostatistic > {}" \;
+
+%if 0%{?with_python3}
+make  DESTDIR=${RPM_BUILD_ROOT} -C src/python PYTHON=%{__python3} install
+mv %{buildroot}/%{_bindir}/ostatistic %{buildroot}/%{_bindir}/ostatistic-%{python3_version}
+ln -s ostatistic-%{python3_version} %{buildroot}/%{_bindir}/ostatistic-3
+%if 0%{?with_python2} == 0
+ln -s ostatistic-2 %{buildroot}/%{_bindir}/ostatistic
 %endif
+pathfix.py -pni "%{__python3} %{py3_shbang_opts}" %{buildroot}%{_bindir}/*-%{python3_version}
+%endif
+
+%if 0%{?with_python2}
+make DESTDIR=${RPM_BUILD_ROOT} install -C src/python PYTHON=%{__python2} install
 mv %{buildroot}/%{_bindir}/ostatistic %{buildroot}/%{_bindir}/ostatistic-%{python2_version}
 ln -s ostatistic-%{python2_version} %{buildroot}/%{_bindir}/ostatistic-2
 ln -s ostatistic-2 %{buildroot}/%{_bindir}/ostatistic
+%if %{with_pathfix}
+pathfix.py -pni "%{__python2} %{py2_shbang_opts}" %{buildroot}%{_bindir}/*-%{python2_version}
+%endif
+%endif
+
+find ${RPM_BUILD_ROOT} -name '*.a' -exec rm '{}'  \;
+find ${RPM_BUILD_ROOT} -name '*.la' -exec rm '{}' \;
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -91,8 +151,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*
 %{_libdir}/pkgconfig
 
+%if 0%{?with_python2}
 %files -n %{use_python2_package}
 %defattr(-,root,root)
 %{use_python2_sitelib}/*
 %{_bindir}/ostatistic
 %{_bindir}/ostatistic-2*
+%endif
+
+%if 0%{?with_python3}
+%files -n python3-openstatistic
+%defattr(-,root,root,-)
+%{python3_sitelib}/*
+%if 0%{?with_python2} == 0
+%{_bindir}/ostatistic
+%endif
+%{_bindir}/ostatistic-3*
+%endif
+
