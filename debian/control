@@ -17,12 +17,6 @@ Architecture: any
 Depends: ${misc:Depends}, openstatistic (= ${binary:Version})
 Description: Headers necessary to use OpenStatistic
 
-Package: python-openstatistic
-Section: python
-Architecture: all
-Depends: ${python:Depends}, ${misc:Depends}, python-protobuf, python-lxml
-Description: OpenStatistic Python modules and utilities
-
 Package: python3-openstatistic
 Section: python
 Architecture: all
