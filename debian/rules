@@ -5,18 +5,11 @@ export DEB_CXXFLAGS_MAINT_APPEND=-O3 -Wall -Wextra
 override_dh_makeshlibs:
 	dh_listpackages | xargs -I {} dpkg-gensymbols -Pdebian/{} -p{} -q
 
-PYTHON2_VERSION:=$(shell python2 2>&1 --version | awk '{split($$2,v,"."); printf("%d.%d",v[1],v[2]);}')
-PYTHON3_VERSION:=$(shell python3 2>&1 --version | awk '{split($$2,v,"."); printf("%d.%d",v[1],v[2]);}')
-
 override_dh_auto_install:
 	dh_auto_install -- PYTHON=python3
-	mv debian/tmp/usr/bin/ostatistic debian/tmp/usr/bin/ostatistic-$(PYTHON3_VERSION)
-	cd debian/tmp/usr/bin; ln -s ostatistic-$(PYTHON3_VERSION) ostatistic-3
 
-	dh_auto_install -- PYTHON=python2
-	mv debian/tmp/usr/bin/ostatistic debian/tmp/usr/bin/ostatistic-$(PYTHON2_VERSION)
-	cd debian/tmp/usr/bin; ln -s ostatistic-$(PYTHON2_VERSION) ostatistic-2
-	cd debian/tmp/usr/bin; ln -s ostatistic-2 ostatistic
+override_dh_python3:
+	dh_python3 --shebang=/usr/bin/python3
 
 %:
-	dh $@ --parallel --with python2,python3
+	dh $@ --parallel --with python3

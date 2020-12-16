@@ -256,7 +256,7 @@ class ProbeBase(Probe):
         self._sock.send(struct.pack("!L%ds" % len(msg),len(msg),msg))
 
         # wait for response
-        buf = str()
+        buf = bytes()
         messageLengthBytes = 0
         running = True
         response = None
@@ -276,7 +276,7 @@ class ProbeBase(Probe):
 
                 if(len(buf) == 4):
                     (messageLengthBytes,) = struct.unpack('!I',buf)
-                    buf = str()
+                    buf = bytes()
 
             else:
                 data = self._sock.recv(messageLengthBytes-len(buf))
@@ -294,7 +294,7 @@ class ProbeBase(Probe):
                     response = openstatisticapi_pb2.Response()
                     response.ParseFromString(buf)
                     messageLengthBytes = 0
-                    buf = str()
+                    buf = bytes()
                     break
 
         return response
