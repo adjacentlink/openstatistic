@@ -1,0 +1,21 @@
+FROM centos:7
+
+RUN yum -y update
+RUN yum clean all
+
+RUN yum -y install epel-release
+RUN yum -y install git gcc-c++ make autoconf automake libtool rpm-build python-setuptools python-devel \
+                   protobuf protobuf-devel protobuf-compiler protobuf-python libuuid-devel libxml2-devel \
+                   sqlite-devel zeromq-devel
+
+WORKDIR /opt
+RUN git clone https://github.com/adjacentlink/openstatistic -b develop
+
+WORKDIR openstatistic
+RUN ./autogen.sh
+RUN ./configure --with-python2
+RUN make rpm
+RUN yum -y install $(find .rpmbuild/RPMS -name "*\.rpm")
+
+RUN echo 'centos7 complete'
+
