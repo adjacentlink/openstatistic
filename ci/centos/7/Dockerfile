@@ -1,12 +1,8 @@
-FROM centos:7
+# pull from our opentestpoint image
+FROM gcr.io/automated-builds-303920/centos7.opentestpoint
 
 RUN yum -y update
 RUN yum clean all
-
-RUN yum -y install epel-release
-RUN yum -y install git gcc-c++ make autoconf automake libtool rpm-build python-setuptools python-devel \
-                   protobuf protobuf-devel protobuf-compiler protobuf-python libuuid-devel libxml2-devel \
-                   sqlite-devel zeromq-devel
 
 WORKDIR /opt
 RUN git clone https://github.com/adjacentlink/openstatistic -b develop
