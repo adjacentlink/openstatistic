@@ -1,4 +1,5 @@
-FROM fedora33.opentestpoint
+# pull from our opentestpoint image
+FROM gcr.io/automated-builds-303920/fedora33.opentestpoint
 
 RUN dnf -y update
 RUN dnf clean all
