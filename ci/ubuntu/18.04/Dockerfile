@@ -12,10 +12,11 @@ RUN apt-get -y upgrade
 WORKDIR /opt
 RUN mkdir -p dependencies
 COPY --from=gcr.io/automated-builds-303920/ubuntu18.04.opentestpoint /opt/built/* dependencies/
-RUN dpkg -i dependencies/*\.deb; apt-get -y -f install
+RUN dpkg -i dependencies/*; apt-get -y -f install
 
 # Build tools
-RUN apt-get -y install git gcc g++ autoconf automake libtool dh-python debhelper
+RUN apt-get -y install git gcc g++ autoconf automake libtool dh-python debhelper pkg-config python3-setuptools \
+                       protobuf-compiler libprotobuf-dev
 
 RUN git clone https://github.com/adjacentlink/openstatistic -b develop
 
@@ -24,7 +25,7 @@ RUN ./autogen.sh
 RUN ./configure
 RUN make deb
 RUN cp $(find .debbuild -name "*\.deb") /opt/built
-RUN dpkg -i /opt/built/python3*\.deb /opt/built/emane*\.deb; apt-get -y install -f
+RUN dpkg -i /opt/built/*; apt-get -y install -f
 
 RUN echo 'complete'
 
