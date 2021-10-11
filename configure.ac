@@ -33,7 +33,7 @@
  See toplevel COPYING for more information.
 ])
 
-AC_INIT([openstatistic],1.0.7,[labs at adjacent link dot com])
+AC_INIT([openstatistic],1.0.8,[labs at adjacent link dot com])
 
 AC_CONFIG_SRCDIR([src])
 
