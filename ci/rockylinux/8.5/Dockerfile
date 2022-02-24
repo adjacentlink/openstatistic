@@ -10,7 +10,7 @@ RUN dnf config-manager --set-enabled powertools
 # Copy and install packages from the latest opentestpoint build
 WORKDIR /opt
 RUN mkdir -p dependencies
-COPY --from=gcr.io/automated-builds-303920/rockylinux85.opentestpoint /opt/built/* dependencies/
+COPY --from=gcr.io/automated-builds-303920/rockylinux8.5.opentestpoint /opt/built/* dependencies/
 RUN dnf -y install dependencies/*\.rpm
 
 # Build tools
