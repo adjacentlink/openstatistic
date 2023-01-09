@@ -98,6 +98,8 @@ int main(int , char * [])
         OpenStatistic::StatisticProperties::NONE,
         "BarTable description");
 
+      (void) pBarTable;
+
       // Start the OpenStatistic Service
       OpenStatistic::Service::instance()->start("localhost:47001");
 

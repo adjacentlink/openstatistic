@@ -1,7 +1,6 @@
 from setuptools import setup
 
 setup(name='python-openstatistic',
-      namespace_packages=['otestpoint'],
       version='@VERSION@',
       description='OpenStatistic Python Tools',
       long_description='OpenStatistic Python Tools',

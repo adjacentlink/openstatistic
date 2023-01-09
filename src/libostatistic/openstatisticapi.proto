@@ -46,6 +46,8 @@
 // specification and is used to delineate message boundaries in a data
 // stream.
 
+syntax = "proto2";
+
 package OpenStatisticAPI;
 
 option optimize_for = SPEED;

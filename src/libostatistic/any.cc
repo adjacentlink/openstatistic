@@ -70,7 +70,10 @@ OpenStatistic::Any::Any(const Any& rhs)
     }
   else
     {
-      memcpy(this,&rhs,sizeof(Any));
+      // copy state  as binary represenation
+      memcpy(reinterpret_cast<char *>(this),
+             reinterpret_cast<const char *>(&rhs),
+             sizeof(Any));
     }
 }
 
@@ -90,7 +93,9 @@ OpenStatistic::Any & OpenStatistic::Any::operator=(const Any & rhs)
   else
     {
       // copy state  as binary represenation
-      memcpy(this,&rhs,sizeof(Any));
+       memcpy(reinterpret_cast<char *>(this),
+             reinterpret_cast<const char *>(&rhs),
+             sizeof(Any));
     }
 
   return *this;

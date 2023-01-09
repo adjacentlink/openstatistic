@@ -1,5 +1,5 @@
 %AC_COPYRIGHT([
- Copyright (c) 2016-2018,2020-2022 - Adjacent Link LLC, Bridgewater,
+ Copyright (c) 2016-2018,2020-2023 - Adjacent Link LLC, Bridgewater,
  New Jersey
  All rights reserved.
 
@@ -33,7 +33,7 @@
  See toplevel COPYING for more information.
 ])
 
-AC_INIT([openstatistic],1.0.10,[labs at adjacent link dot com])
+AC_INIT([openstatistic],[1.0.10],[labs at adjacent link dot com])
 
 AC_CONFIG_SRCDIR([src])
 
@@ -49,13 +49,13 @@ AC_PROG_CXX
 
 AC_PROG_CXXCPP
 
-AC_GNU_SOURCE
+AC_USE_SYSTEM_EXTENSIONS
 
 AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
 
 AC_PROG_INSTALL
 
-AC_PROG_LIBTOOL
+LT_INIT
 
 AC_LANG([C++])
 
@@ -97,7 +97,7 @@ AC_SUBST(TOPDIR,${topdir})
 LANG=C
 AC_SUBST(LANG)
 
-AM_PATH_PYTHON([2.6])
+AM_PATH_PYTHON([3.6])
 
 # check for rpmbuild
 AC_CHECK_PROG(HAVE_RPMBUILD, rpmbuild, true, false)
@@ -115,8 +115,7 @@ AC_SUBST(DISTRIB_CODENAME)
 
 AC_SUBST(DATE_RFC2822,`date -R`)
 
-AC_OUTPUT(
- Makefile
+AC_CONFIG_FILES([Makefile
  include/Makefile
  include/ostatistic/Makefile
  src/Makefile
@@ -124,4 +123,5 @@ AC_OUTPUT(
  src/example/Makefile
  src/python/Makefile
  src/libostatistic/libostatistic.pc
-)
+])
+AC_OUTPUT
