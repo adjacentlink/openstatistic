@@ -11,7 +11,7 @@ RUN apt-get -y upgrade --no-install-recommends
 # Copy and install packages from the latest opentestpoint build
 WORKDIR /opt
 RUN mkdir -p dependencies
-COPY --from=gcr.io/automated-builds-303920/ubuntu20.04.opentestpoint /opt/built/* dependencies/
+COPY --from=gcr.io/automated-builds-303920/ubuntu22.04.opentestpoint /opt/built/* dependencies/
 RUN dpkg -i dependencies/*; apt-get -y -f install
 
 # Build tools
