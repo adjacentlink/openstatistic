@@ -41,7 +41,7 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE([])
 
-AM_PATH_PYTHON([2.7])
+AM_PATH_PYTHON([3.6])
 
 : ${CXXFLAGS="-g -O3 -Wall -Wextra"}
 
@@ -96,8 +96,6 @@ AC_SUBST(TOPDIR,${topdir})
 
 LANG=C
 AC_SUBST(LANG)
-
-AM_PATH_PYTHON([3.6])
 
 # check for rpmbuild
 AC_CHECK_PROG(HAVE_RPMBUILD, rpmbuild, true, false)
