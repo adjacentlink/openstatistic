@@ -35,6 +35,7 @@
 #ifndef OPENSTATISTIC_INETADDR_HEADER_
 #define OPENSTATISTIC_INETADDR_HEADER_
 
+#include <cstdint>
 #include <string>
 #include <memory>
 #include <net/if.h>

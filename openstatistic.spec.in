@@ -52,7 +52,7 @@ ln -s ostatistic-%{python3_version} %{buildroot}/%{_bindir}/ostatistic-3
 
 ln -s ostatistic-2 %{buildroot}/%{_bindir}/ostatistic
 
-pathfix.py -pni "%{__python3} %{py3_shbang_opts}" %{buildroot}%{_bindir}/*-%{python3_version}
+%py3_shebang_fix %{buildroot}%{_bindir}/*-%{python3_version}
 
 find ${RPM_BUILD_ROOT} -name '*.a' -exec rm '{}'  \;
 find ${RPM_BUILD_ROOT} -name '*.la' -exec rm '{}' \;
