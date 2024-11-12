@@ -5,7 +5,8 @@ EXTRA_DIST= \
  ostatistic \
  otestpoint \
  scripts \
- setup.py.in 
+ setup.py.in \
+ src
 
 BUILT_SOURCES = \
  setup.py \

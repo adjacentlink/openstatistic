@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013,2015-2016 - Adjacent Link LLC, Bridgewater,
+ * Copyright (c) 2013,2015-2016,2024 - Adjacent Link LLC, Bridgewater,
  * New Jersey
  * All rights reserved.
  *
@@ -93,7 +93,7 @@ OpenStatistic::Any & OpenStatistic::Any::operator=(const Any & rhs)
   else
     {
       // copy state  as binary represenation
-       memcpy(reinterpret_cast<char *>(this),
+      memcpy(reinterpret_cast<char *>(this),
              reinterpret_cast<const char *>(&rhs),
              sizeof(Any));
     }
@@ -275,7 +275,7 @@ bool OpenStatistic::Any::operator>=(const OpenStatistic::Any & rhs) const
         }
     }
 
-  throw Exception("Ant type mismatch");
+  throw Exception("Type mismatch");
 }
 
 bool OpenStatistic::Any::operator<(const OpenStatistic::Any & rhs) const
@@ -296,6 +296,106 @@ bool OpenStatistic::Any::operator<(const OpenStatistic::Any & rhs) const
 
         case Any::Type::TYPE_STRING:
           return sValue_ < rhs.sValue_;
+
+        default:
+          break;
+        }
+    }
+  else
+    {
+      switch(type_)
+        {
+          // we are a int64
+        case Any::Type::TYPE_INT64:
+
+          switch(rhs.type_)
+            {
+              // they are uint64 or bool
+            case Any::Type::TYPE_UINT64:
+            case Any::Type::TYPE_BOOL:
+
+              // if we are less than 0, they must be greater
+              if(i64Value_ < 0)
+                {
+                  return true;
+                }
+              else
+                {
+                  // we can cast to unsigned and compare
+                  return static_cast<std::uint64_t>(i64Value_) < rhs.u64Value_;
+                }
+
+              // they are a double
+            case Any::Type::TYPE_DOUBLE:
+              // we can cast to a double and compare
+              return static_cast<double>(i64Value_) < rhs.dValue_;
+
+            default:
+              break;
+            }
+
+          break;
+
+          // we are uint64 or bool
+        case Any::Type::TYPE_UINT64:
+        case Any::Type::TYPE_BOOL:
+
+          switch(rhs.type_)
+            {
+              // they are int64
+            case Any::Type::TYPE_INT64:
+
+              // if they are less than 0, we must be greater
+              if(rhs.i64Value_ < 0)
+                {
+                  return false;
+                }
+              else
+                {
+                  // we can cast them to uint64 and compare
+                  return u64Value_ < static_cast<std::uint64_t>(rhs.i64Value_);
+                }
+
+              // they are a bool or unit64
+            case Any::Type::TYPE_BOOL:
+            case Any::Type::TYPE_UINT64:
+              return u64Value_ < rhs.u64Value_;
+
+              // they are a double
+            case Any::Type::TYPE_DOUBLE:
+
+              // we can cast to a double and compare
+              return static_cast<double>(u64Value_) < rhs.dValue_;
+
+            default:
+              break;
+            }
+
+          break;
+
+          // we are a double
+        case Any::Type::TYPE_DOUBLE:
+
+          switch(rhs.type_)
+            {
+              // they are uint64 or bool
+            case Any::Type::TYPE_UINT64:
+            case Any::Type::TYPE_BOOL:
+
+              // we can cast them to a double and compare
+              return dValue_ < static_cast<double>(rhs.u64Value_);
+
+              // they are int64
+            case Any::Type::TYPE_INT64:
+
+              // we can cast them to a double and compare
+              return dValue_ < static_cast<double>(rhs.i64Value_);
+
+            default:
+              break;
+            }
+
+          break;
 
         default:
           break;
@@ -328,6 +428,107 @@ bool OpenStatistic::Any::operator>(const OpenStatistic::Any & rhs) const
           break;
         }
     }
+  else
+    {
+      switch(type_)
+        {
+          // we are a int64
+        case Any::Type::TYPE_INT64:
+
+          switch(rhs.type_)
+            {
+              // they are uint64 or bool
+            case Any::Type::TYPE_UINT64:
+            case Any::Type::TYPE_BOOL:
+
+              // if we are less than 0, they must be greater
+              if(i64Value_ < 0)
+                {
+                  return false;
+                }
+              else
+                {
+                  // we can cast to unsigned and compare
+                  return static_cast<std::uint64_t>(i64Value_) > rhs.u64Value_;
+                }
+
+              // they are a double
+            case Any::Type::TYPE_DOUBLE:
+              // we can cast to a double and compare
+              return static_cast<double>(i64Value_) > rhs.dValue_;
+
+            default:
+              break;
+            }
+
+          break;
+
+          // we are uint64 or bool
+        case Any::Type::TYPE_UINT64:
+        case Any::Type::TYPE_BOOL:
+
+          switch(rhs.type_)
+            {
+              // they are int64
+            case Any::Type::TYPE_INT64:
+
+              // if they are less than 0, we must be greater
+              if(rhs.i64Value_ < 0)
+                {
+                  return true;
+                }
+              else
+                {
+                  // we can cast them to uint64 and compare
+                  return u64Value_ > static_cast<std::uint64_t>(rhs.i64Value_);
+                }
+
+              // they are a bool or unit64
+            case Any::Type::TYPE_BOOL:
+            case Any::Type::TYPE_UINT64:
+              return u64Value_ > rhs.u64Value_;
+
+              // they are a double
+            case Any::Type::TYPE_DOUBLE:
+
+              // we can cast to a double and compare
+              return static_cast<double>(u64Value_) > rhs.dValue_;
+
+            default:
+              break;
+            }
+
+          break;
+
+          // we are a double
+        case Any::Type::TYPE_DOUBLE:
+
+          switch(rhs.type_)
+            {
+              // they are uint64 or bool
+            case Any::Type::TYPE_UINT64:
+            case Any::Type::TYPE_BOOL:
+
+              // we can cast them to a double and compare
+              return dValue_ > static_cast<double>(rhs.u64Value_);
+
+              // they are int64
+            case Any::Type::TYPE_INT64:
+
+              // we can cast them to a double and compare
+              return dValue_ >static_cast<double>(rhs.i64Value_);
+
+            default:
+              break;
+            }
+
+          break;
+
+        default:
+          break;
+        }
+    }
+
 
   throw Exception("Type mismatch");
 }

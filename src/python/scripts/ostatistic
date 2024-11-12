@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-# Copyright (c) 2016,2018,2019 - Adjacent Link LLC, Bridgewater,
+#!/usr/bin/env python3
+# Copyright (c) 2016,2018,2019,2024 - Adjacent Link LLC, Bridgewater,
 # New Jersey
 # All rights reserved.
 #
@@ -32,8 +32,6 @@
 #
 # See toplevel COPYING for more information.
 #
-from __future__ import absolute_import, division, print_function
-
 from ostatistic.interface.client import Client
 from argparse import ArgumentParser
 import sys

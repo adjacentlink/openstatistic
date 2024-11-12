@@ -70,15 +70,13 @@ then
        Makefile \
        Makefile.in \
        missing 
-    find m4 -type f ! -name 'm4_ax_cxx_compile_stdcxx_11.m4' -delete
+    find m4 -type f \
+       ! -name 'ax_cxx_compile_stdcxx.m4' \
+       ! -name 'ax_cxx_compile_stdcxx_17.m4' \
+       -delete
     find . -name 'Makefile.in' -delete
+    find . -name '.deps' -delete
     
 else
-    libtoolize --force --copy
-
-    aclocal --force
-
-    automake --add-missing --copy
-
-    autoreconf --force
+    autoreconf --install
 fi

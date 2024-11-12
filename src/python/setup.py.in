@@ -1,6 +1,21 @@
-from setuptools import setup
+from distutils.core import setup, Extension
 
-setup(name='python-openstatistic',
+ostatistic_lib = Extension('ostatistic.lib',
+                           extra_compile_args=['-std=c++17'],
+                           include_dirs=['../../include'],
+                           library_dirs=['../../src/libostatistic/.libs'],
+                           libraries = ['ostatistic'],
+                           sources = [
+                               'src/extboolean.cc',
+                               'src/extdouble.cc',
+                               'src/extservice.cc',
+                               'src/extsignedinteger.cc',
+                               'src/extstring.cc',
+                               'src/exttable.cc',
+                               'src/extunsignedinteger.cc',
+                               'src/libostatistic.cc'])
+
+setup(name='openstatistic',
       version='@VERSION@',
       description='OpenStatistic Python Tools',
       long_description='OpenStatistic Python Tools',
@@ -12,5 +27,6 @@ setup(name='python-openstatistic',
                  'otestpoint',
                  'otestpoint.ostatistic'],
       scripts=['scripts/ostatistic'],
-      license = 'BSD'
+      license = 'BSD',
+      ext_modules = [ostatistic_lib]
 )
