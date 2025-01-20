@@ -1,4 +1,4 @@
-from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
 ostatistic_lib = Extension('ostatistic.lib',
                            extra_compile_args=['-std=c++17'],
