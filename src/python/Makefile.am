@@ -22,6 +22,7 @@ clean-local: setup.py
 	-rm -f MANIFEST
 	-rm -rf openstatistic_python.egg-info
 	-find . -name "*.pyc" -delete
+	-rm -f .installedfiles
 
 DISTCLEANFILES=setup.py
 
@@ -39,10 +40,16 @@ setup.py:	setup.py.in
 
 install-exec-hook: $(BUILT_SOURCES)
 	$(PYTHON) setup.py install \
+            --single-version-externally-managed \
 	    -O1 \
-	    --prefix=$(prefix) \
-	    --exec-prefix=$(exec_prefix) \
-	    $(if $(DESTDIR),--root=$(DESTDIR))
+            --record .installedfiles \
+            --prefix=$(prefix) \
+            --exec-prefix=$(exec_prefix) \
+            $(if $(DESTDIR),--root=$(DESTDIR)) \
+            $(if $(subst false,,$(HAVE_DEB)),--install-layout=deb)
+
+uninstall-hook:
+	if test -f .installedfiles; then xargs -a .installedfiles rm -f; fi
 
 ostatistic/interface/openstatisticapi_pb2.py: ../libostatistic/openstatisticapi.proto
 	protoc -I../libostatistic --python_out=ostatistic/interface  $<
