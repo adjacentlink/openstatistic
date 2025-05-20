@@ -11,7 +11,7 @@ RUN dnf clean all
 # Copy and install packages from the latest opentestpoint build
 WORKDIR /opt
 RUN mkdir -p dependencies
-COPY --from=gcr.io/automated-builds-303920/rockylinux8.opentestpoint /opt/built/* dependencies/
+COPY --from=gcr.io/automated-builds-303920/rockylinux9.opentestpoint /opt/built/* dependencies/
 RUN dnf -y install dependencies/*\.rpm
 
 # Build tools
