@@ -1,5 +1,5 @@
 %AC_COPYRIGHT([
- Copyright (c) 2016-2018,2020-2023 - Adjacent Link LLC, Bridgewater,
+ Copyright (c) 2016-2018,2020-2025 - Adjacent Link LLC, Bridgewater,
  New Jersey
  All rights reserved.
 
@@ -33,7 +33,7 @@
  See toplevel COPYING for more information.
 ])
 
-AC_INIT([openstatistic],[1.0.11],[labs at adjacent link dot com])
+AC_INIT([openstatistic],[1.0.12],[labs at adjacent link dot com])
 
 AC_CONFIG_SRCDIR([src])
 
