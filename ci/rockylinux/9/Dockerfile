@@ -1,17 +1,17 @@
-FROM rockylinux:8
+FROM rockylinux:9
 
 RUN mkdir -p /opt/built
 
 RUN dnf -y update
 RUN dnf -y install epel-release dnf-plugins-core
-RUN dnf config-manager --set-enabled powertools
+RUN dnf config-manager --enable crb
 RUN dnf clean all
 
 
 # Copy and install packages from the latest opentestpoint build
 WORKDIR /opt
 RUN mkdir -p dependencies
-COPY --from=gcr.io/automated-builds-303920/rockylinux8.opentestpoint /opt/built/* dependencies/
+COPY --from=gcr.io/automated-builds-303920/rockylinux9.opentestpoint /opt/built/* dependencies/
 RUN dnf -y install dependencies/*\.rpm
 
 # Build tools

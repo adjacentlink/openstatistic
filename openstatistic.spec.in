@@ -31,7 +31,6 @@ Requires: python3-protobuf
 Requires: python3-lxml
 Summary: OpenStatistic Python modules
 Group: Development/Libraries
-BuildArch: noarch
 
 %description -n python3-openstatistic
 OpenStatistic Python modules
@@ -45,14 +44,7 @@ make
 
 %install
 make DESTDIR=${RPM_BUILD_ROOT} install
-
-mv %{buildroot}/%{_bindir}/ostatistic %{buildroot}/%{_bindir}/ostatistic-%{python3_version}
-
-ln -s ostatistic-%{python3_version} %{buildroot}/%{_bindir}/ostatistic-3
-
-ln -s ostatistic-2 %{buildroot}/%{_bindir}/ostatistic
-
-%py3_shebang_fix %{buildroot}%{_bindir}/*-%{python3_version}
+%py3_shebang_fix %{buildroot}%{_bindir}/ostatistic
 
 find ${RPM_BUILD_ROOT} -name '*.a' -exec rm '{}'  \;
 find ${RPM_BUILD_ROOT} -name '*.la' -exec rm '{}' \;
@@ -83,6 +75,5 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n python3-openstatistic
 %defattr(-,root,root,-)
-%{python3_sitelib}/*
+%{python3_sitearch}/*
 %{_bindir}/ostatistic
-%{_bindir}/ostatistic-3*

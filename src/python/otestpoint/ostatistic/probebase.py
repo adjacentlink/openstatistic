@@ -126,7 +126,7 @@ class ProbeBase(Probe):
 
             p = self.build("Measurement_%s"%normalize)
 
-            match = re.match(".+\.Tables\..+",probe.tag)
+            match = re.match(r".+\.Tables\..+",probe.tag)
 
             if match:
                 self._tables.append((probe.tag,p))
