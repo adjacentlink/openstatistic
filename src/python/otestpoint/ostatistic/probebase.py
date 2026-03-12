@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014-2016,2019 - Adjacent Link LLC, Bridgewater,
+# Copyright (c) 2014-2016,2019,2026 - Adjacent Link LLC, Bridgewater,
 # New Jersey
 # All rights reserved.
 #
@@ -31,10 +31,10 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
-from pkg_resources import resource_filename
 from otestpoint.interface import Probe
 from otestpoint.interface import ProbeException
 from otestpoint.interface.measurementtable_pb2 import MeasurementTable
+from otestpoint.utils.schemaresourcereader import read_schema_from_resource
 import otestpoint.toolkit.logger as Logger
 import ostatistic.interface.openstatisticapi_pb2 as openstatisticapi_pb2
 
@@ -95,9 +95,7 @@ class ProbeBase(Probe):
 
         root = tree.getroot()
 
-        schemaDoc = etree.parse(resource_filename(self._moduleName,self._schemaFile))
-
-        schema = etree.XMLSchema(etree=schemaDoc,attribute_defaults=True)
+        schema = read_schema_from_resource(self._moduleName,self._schemaFile)
 
         if not schema(root):
             message = ""
