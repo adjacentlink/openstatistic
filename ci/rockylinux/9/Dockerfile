@@ -15,7 +15,7 @@ RUN dnf clean all
 
 
 # Build tools
-RUN dnf -y install git gcc-c++ make autoconf automake libtool rpm-build
+RUN dnf -y install git gcc-c++ make autoconf automake libtool rpm-build python3-setuptools python3-devel protobuf-devel
 
 RUN git clone https://github.com/adjacentlink/openstatistic -b develop
 

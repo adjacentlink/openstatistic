@@ -16,7 +16,7 @@ RUN apt-get -y upgrade --no-install-recommends
 
 # Build tools
 RUN apt-get -y install git gcc g++ autoconf automake libtool dh-python debhelper pkg-config python3-setuptools \
-                       protobuf-compiler libprotobuf-dev
+                       protobuf-compiler libprotobuf-dev python3-dev
 
 RUN git clone https://github.com/adjacentlink/openstatistic -b develop
 
