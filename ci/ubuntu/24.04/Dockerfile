@@ -8,11 +8,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get -y update
 RUN apt-get -y upgrade --no-install-recommends
 
-# Copy and install packages from the latest opentestpoint build
-WORKDIR /opt
-RUN mkdir -p dependencies
-COPY --from=gcr.io/automated-builds-303920/ubuntu24.04.opentestpoint /opt/built/* dependencies/
-RUN dpkg -i dependencies/*; apt-get -y -f install
+
+
+
+
+
 
 # Build tools
 RUN apt-get -y install git gcc g++ autoconf automake libtool dh-python debhelper pkg-config python3-setuptools \

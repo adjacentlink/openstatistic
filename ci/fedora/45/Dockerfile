@@ -1,15 +1,15 @@
-FROM fedora:41
+FROM fedora:45
 
 RUN mkdir -p /opt/built
 
 RUN dnf -y update
 
 
-# Copy and install packages from the latest opentestpoint build
-WORKDIR /opt
-RUN mkdir -p dependencies
-COPY --from=gcr.io/automated-builds-303920/fedora41.opentestpoint /opt/built/* dependencies/
-RUN dnf -y install dependencies/*\.rpm
+
+
+
+
+
 
 # Build tools
 RUN dnf -y install git gcc-c++ make autoconf automake libtool rpm-build

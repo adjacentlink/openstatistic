@@ -8,11 +8,11 @@ RUN dnf config-manager --enable crb
 RUN dnf clean all
 
 
-# Copy and install packages from the latest opentestpoint build
-WORKDIR /opt
-RUN mkdir -p dependencies
-COPY --from=gcr.io/automated-builds-303920/rockylinux9.opentestpoint /opt/built/* dependencies/
-RUN dnf -y install dependencies/*\.rpm
+
+
+
+
+
 
 # Build tools
 RUN dnf -y install git gcc-c++ make autoconf automake libtool rpm-build
